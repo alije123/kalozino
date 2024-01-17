@@ -72,7 +72,7 @@ pub async fn timely(ctx: Context<'_>) -> Result<(), Error> {
     Ok(())
 }
 
-#[tracing::instrument(name = "first_time", fields(user_id = %user.id.get()))]
+#[tracing::instrument(name = "first_time")]
 pub async fn first_time(
     ctx: Context<'_>,
     user: &serenity::User,

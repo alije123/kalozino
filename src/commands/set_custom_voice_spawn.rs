@@ -11,7 +11,7 @@ use crate::{
     Context, Error,
 };
 
-/// Тест
+/// Задать кастомный голосовой канал
 #[tracing::instrument]
 #[poise::command(
     slash_command,
@@ -50,18 +50,6 @@ pub async fn set_custom_voice_spawn(
                 ),
             )
             .await?;
-        return Ok(());
-    };
-    let Some(guild) = ctx.partial_guild().await else {
-        ctx.send(
-            CreateReply::default().embed(
-                serenity::CreateEmbed::default()
-                    .title("Uh oh!")
-                    .description("Я не почему-то не могу понять что это за сервер такой")
-                    .color(serenity::Color::RED),
-            ),
-        )
-        .await?;
         return Ok(());
     };
 

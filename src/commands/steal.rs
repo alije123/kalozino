@@ -25,16 +25,29 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
             ),
         )
         .await?;
+        return Ok(());
     } else if user_to_steal.bot {
         ctx.send(
             CreateReply::default().embed(
                 serenity::CreateEmbed::default()
-                    .title("Ты чо еблан какой баланс у ботов")
-                    .description("Боты не играют в казино")
+                    .title("Ты чо еблан какой стил ботов")
+                    .description("Боты не играют в каволое казино")
                     .color(serenity::Color::RED),
             ),
         )
         .await?;
+        return Ok(());
+    } else if user.id == user_to_steal.id {
+        ctx.send(
+            CreateReply::default().embed(
+                serenity::CreateEmbed::default()
+                    .title("Стой стой!")
+                    .description("Я уберегаю тебя от впустую потраченной попытки стила самого себя, используй её разумно пж")
+                    .color(serenity::Color::RED),
+            ),
+        )
+        .await?;
+        return Ok(());
     }
 
     let mut db = get_connection().await;

@@ -20,13 +20,25 @@ pub async fn give(
                     .title("Ну ты и еблан!")
                     .description("Если ты кинешь отрицательную сумму, то получается чел тебе ещё должен останется, для этого есть steal")
                     .color(serenity::Color::RED),
+                ),
+            )
+            .await?;
+        return Ok(());
+    }
+    let user = ctx.author();
+    if user.id == user_to_give.id {
+        ctx.send(
+            CreateReply::default().embed(
+                serenity::CreateEmbed::default()
+                    .title("ваопдлвпоуклдпоплпоук")
+                    .description("Нельзя кинуть деньги самому себе")
+                    .color(serenity::Color::RED),
             ),
         )
         .await?;
         return Ok(());
     }
     let mut db = get_connection().await;
-    let user = ctx.author();
     let user_id = user.id.get() as i64;
     let Some(mut player) = Player::select()
         .where_bind("id = ?", user_id)
