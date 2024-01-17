@@ -4,10 +4,10 @@ use poise::{
     CreateReply,
 };
 
-use crate::{create_user, database::get_connection, models::database::Player, Context, Error};
+use crate::{create_player, database::get_connection, models::database::Player, Context, Error};
 
 /// Узнай свой ебаный баланс
-#[tracing::instrument(name = "command balance")]
+#[tracing::instrument]
 #[poise::command(slash_command, prefix_command, guild_only, aliases("$"))]
 pub async fn balance(
     ctx: Context<'_>,
@@ -33,7 +33,7 @@ pub async fn balance(
         .await?
     {
         Some(x) => x,
-        None => create_user(ctx, user.clone(), &mut db).await?,
+        None => create_player(ctx, user.clone(), &mut db).await?,
     };
 
     ctx.send(

@@ -26,7 +26,7 @@ pub struct Data {}
 type Error = anyhow::Error;
 type Context<'a> = poise::Context<'a, Data, Error>;
 
-async fn create_user(
+async fn create_player(
     ctx: Context<'_>,
     discord_user: serenity::User,
     db: &mut PgConnection,
@@ -85,6 +85,7 @@ async fn main() {
                 commands::steal::steal(),
                 commands::set_custom_voice_spawn::set_custom_voice_spawn(),
                 commands::top::top(),
+                commands::give::give(),
             ],
             prefix_options: poise::PrefixFrameworkOptions {
                 prefix: Some("!".into()),

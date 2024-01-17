@@ -10,7 +10,7 @@ use poise::{
 use crate::{database::get_connection, models::database::Player, Context, Error};
 
 /// Топ лучших на свете людей
-#[tracing::instrument(name = "command top")]
+#[tracing::instrument]
 #[poise::command(slash_command, prefix_command, guild_only, aliases("%"))]
 pub async fn top(
     ctx: Context<'_>,

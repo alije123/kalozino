@@ -12,7 +12,7 @@ use crate::{
 };
 
 /// Тест
-#[tracing::instrument(name = "command set_custom_voice_spawn")]
+#[tracing::instrument]
 #[poise::command(
     slash_command,
     prefix_command,

@@ -9,9 +9,9 @@ use rand::{
     Rng,
 };
 
-use crate::{create_user, database::get_connection, models::database::Player, Context, Error};
+use crate::{create_player, database::get_connection, models::database::Player, Context, Error};
 
-#[tracing::instrument(name = "command steal", fields(user_to_steal = %user_to_steal.id.get()))]
+#[tracing::instrument]
 #[poise::command(slash_command, prefix_command, guild_only)]
 pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
     let user = ctx.author();
@@ -45,7 +45,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
         .await?
     {
         Some(x) => x,
-        None => create_user(ctx, user.clone(), &mut db).await?,
+        None => create_player(ctx, user.clone(), &mut db).await?,
     };
 
     if player
@@ -69,7 +69,8 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                         "Подожди ещё {}",
                         duration_str
                     )))
-                    .color(serenity::Color::RED),
+                    .color(serenity::Color::RED)
+                    .thumbnail("https://cdn.discordapp.com/emojis/769587992972230668.webp?quality=lossless"),
             ),
         )
         .await?;
@@ -82,7 +83,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
         .await?
     {
         Some(x) => x,
-        None => create_user(ctx, user_to_steal.clone(), &mut db).await?,
+        None => create_player(ctx, user_to_steal.clone(), &mut db).await?,
     };
 
     let choices = [StealChoice::Steal, StealChoice::Fail, StealChoice::StealAll];

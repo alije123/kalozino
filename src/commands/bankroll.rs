@@ -5,15 +5,15 @@ use poise::{
 };
 use rand::distributions::{Distribution, WeightedIndex};
 
-use crate::{create_user, database::get_connection, models::database::Player, Context, Error};
+use crate::{create_player, database::get_connection, models::database::Player, Context, Error};
 
 /// Проебать свои деньги, или же выиграть больше?
-#[tracing::instrument(name = "command bankroll", fields(bet = %bet))]
+#[tracing::instrument]
 #[poise::command(slash_command, prefix_command, guild_only, aliases("br"))]
 pub async fn bankroll(
     ctx: Context<'_>,
     #[description = "Сколько денег хочешь проебать"]
-    #[min = 0.0]
+    #[min = 0.0000000001]
     bet: f64,
 ) -> Result<(), Error> {
     if bet == 0.0 {
@@ -52,7 +52,7 @@ pub async fn bankroll(
         .await?
     {
         Some(x) => x,
-        None => create_user(ctx, user.clone(), &mut db).await?,
+        None => create_player(ctx, user.clone(), &mut db).await?,
     };
 
     if bet > player.balance {

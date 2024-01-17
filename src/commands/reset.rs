@@ -7,7 +7,7 @@ use poise::{
 use crate::{database::get_connection, models::database::Player, Context, Error};
 
 /// Сбросить всё к хуям
-#[tracing::instrument(name = "command reset")]
+#[tracing::instrument]
 #[poise::command(slash_command, prefix_command, guild_only)]
 pub async fn reset(ctx: Context<'_>) -> Result<(), Error> {
     let mut db = get_connection().await;

@@ -3,9 +3,9 @@ use ormlite::Model;
 use poise::{serenity_prelude as serenity, CreateReply};
 use rand::Rng;
 
-use crate::{create_user, database::get_connection, models::database::Player, Context, Error};
+use crate::{create_player, database::get_connection, models::database::Player, Context, Error};
 
-#[tracing::instrument(name = "timely")]
+#[tracing::instrument]
 /// Получай по ебалу каждый день
 #[poise::command(slash_command, prefix_command, guild_only)]
 pub async fn timely(ctx: Context<'_>) -> Result<(), Error> {
@@ -18,7 +18,7 @@ pub async fn timely(ctx: Context<'_>) -> Result<(), Error> {
         .await?
     {
         Some(x) => x,
-        None => create_user(ctx, user.clone(), &mut db).await?,
+        None => create_player(ctx, user.clone(), &mut db).await?,
     };
 
     match (
