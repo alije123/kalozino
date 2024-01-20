@@ -17,23 +17,27 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
     let user = ctx.author();
     if user_to_steal.id == ctx.framework().bot_id {
         ctx.send(
-            CreateReply::default().embed(
-                serenity::CreateEmbed::default()
-                    .title("Ты что ахуел??")
-                    .description("Какого хуя ты захотел у меня спиздить деньги")
-                    .color(serenity::Color::RED),
-            ),
+            CreateReply::default()
+                .embed(
+                    serenity::CreateEmbed::default()
+                        .title("Ты что ахуел??")
+                        .description("Какого хуя ты захотел у меня спиздить деньги")
+                        .color(serenity::Color::RED),
+                )
+                .reply(true),
         )
         .await?;
         return Ok(());
     } else if user_to_steal.bot {
         ctx.send(
-            CreateReply::default().embed(
-                serenity::CreateEmbed::default()
-                    .title("Ты чо еблан какой стил ботов")
-                    .description("Боты не играют в каволое казино")
-                    .color(serenity::Color::RED),
-            ),
+            CreateReply::default()
+                .embed(
+                    serenity::CreateEmbed::default()
+                        .title("Ты чо еблан какой стил ботов")
+                        .description("Боты не играют в каволое казино")
+                        .color(serenity::Color::RED),
+                )
+                .reply(true),
         )
         .await?;
         return Ok(());
@@ -44,7 +48,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                     .title("Стой стой!")
                     .description("Я уберегаю тебя от впустую потраченной попытки стила самого себя, используй её разумно пж")
                     .color(serenity::Color::RED),
-            ),
+            ).reply(true),
         )
         .await?;
         return Ok(());
@@ -84,7 +88,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                     )))
                     .color(serenity::Color::RED)
                     .thumbnail("https://cdn.discordapp.com/emojis/769587992972230668.webp?quality=lossless"),
-            ),
+            ).reply(true),
         )
         .await?;
         return Ok(());
@@ -117,19 +121,21 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
 
             if player_to_steal.balance < amount {
                 ctx.send(
-                    CreateReply::default().embed(
-                        serenity::CreateEmbed::default()
-                            .title("Бедный чел")
-                            .description("У него нет денег, а собрался у него пиздить")
-                            .footer(serenity::CreateEmbedFooter::new(
-                                "Попробуй спиздить у кого-то другого",
-                            ))
-                            .color(serenity::Color::RED)
-                            .author(
-                                serenity::CreateEmbedAuthor::new(user_to_steal.name.clone())
-                                    .icon_url(user_to_steal.face()),
-                            ),
-                    ),
+                    CreateReply::default()
+                        .embed(
+                            serenity::CreateEmbed::default()
+                                .title("Бедный чел")
+                                .description("У него нет денег, а собрался у него пиздить")
+                                .footer(serenity::CreateEmbedFooter::new(
+                                    "Попробуй спиздить у кого-то другого",
+                                ))
+                                .color(serenity::Color::RED)
+                                .author(
+                                    serenity::CreateEmbedAuthor::new(user_to_steal.name.clone())
+                                        .icon_url(user_to_steal.face()),
+                                ),
+                        )
+                        .reply(true),
                 )
                 .await?;
                 return Ok(());
@@ -141,40 +147,44 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
             player.last_steal_at = Some(Utc::now());
 
             ctx.send(
-                CreateReply::default().embed(
-                    serenity::CreateEmbed::default()
-                        .title(format!(
-                            "Ты успешно спиздил {:.2} деньжат у {}",
-                            amount, user_to_steal.name
-                        ))
-                        .description(format!(
-                            "Теперь у тебя на балансе {:.2}, а у {} - {:.2}",
-                            player.balance, user_to_steal.name, player_to_steal.balance
-                        ))
-                        .footer(serenity::CreateEmbedFooter::new(
-                            "Следующая попытка будет через день",
-                        ))
-                        .color(serenity::Color::DARK_GREEN)
-                        .author(
-                            serenity::CreateEmbedAuthor::new(user.name.clone())
-                                .icon_url(user.face()),
-                        ),
-                ),
+                CreateReply::default()
+                    .embed(
+                        serenity::CreateEmbed::default()
+                            .title(format!(
+                                "Ты успешно спиздил {:.2} деньжат у {}",
+                                amount, user_to_steal.name
+                            ))
+                            .description(format!(
+                                "Теперь у тебя на балансе {:.2}, а у {} - {:.2}",
+                                player.balance, user_to_steal.name, player_to_steal.balance
+                            ))
+                            .footer(serenity::CreateEmbedFooter::new(
+                                "Следующая попытка будет через день",
+                            ))
+                            .color(serenity::Color::DARK_GREEN)
+                            .author(
+                                serenity::CreateEmbedAuthor::new(user.name.clone())
+                                    .icon_url(user.face()),
+                            ),
+                    )
+                    .reply(true),
             )
             .await?;
         }
         StealChoice::Fail => {
             player.last_steal_at = Some(Utc::now());
             ctx.send(
-                CreateReply::default().embed(
-                    serenity::CreateEmbed::default()
-                        .title("Сегодня не получилось спиздить")
-                        .description("Попробуй завтра")
-                        .footer(serenity::CreateEmbedFooter::new(
-                            "Следующая попытка будет через день",
-                        ))
-                        .color(serenity::Color::RED),
-                ),
+                CreateReply::default()
+                    .embed(
+                        serenity::CreateEmbed::default()
+                            .title("Сегодня не получилось спиздить")
+                            .description("Попробуй завтра")
+                            .footer(serenity::CreateEmbedFooter::new(
+                                "Следующая попытка будет через день",
+                            ))
+                            .color(serenity::Color::RED),
+                    )
+                    .reply(true),
             )
             .await?;
         }
@@ -192,7 +202,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                         player.balance, user_to_steal.name)))
                     .color(serenity::Color::DARK_GREEN)
                     .author(serenity::CreateEmbedAuthor::new(user.name.clone())
-                .icon_url(user.face()))),)
+                .icon_url(user.face()))).reply(true))
             .await?;
         }
     }

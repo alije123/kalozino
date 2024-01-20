@@ -210,7 +210,7 @@ pub async fn reset_timely(
             .thumbnail(
                 "https://cdn.discordapp.com/attachments/1185987026365980712/1186141895408222208/sticrgdfgfdgfdgker.webp?ex=65922bb9&is=657fb6b9&hm=5bd56e0829e49e48834ffe55e2b1ad7b167236a9b77349fb1b0f0d701f0034db&"
             )
-        ),
+        ).reply(true),
     ).await?;
         }
         ResetReason::PeriodEnded => {
@@ -226,7 +226,7 @@ pub async fn reset_timely(
                     .thumbnail(
                         "https://cdn.discordapp.com/attachments/1185987026365980712/1187009276179386368/stickftoi9reer.webp?ex=65955389&is=6582de89&hm=e4095b724d56c624df92632af2ef31831fa33a39dabd950821e0a288bceb5b1a&"
                     )
-                ),
+                ).reply(true),
             ).await?;
         }
     }

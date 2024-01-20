@@ -27,7 +27,7 @@ pub async fn top(
                     .title("Fok u")
                     .description("Нельзя больше 20 на странице")
                     .color(serenity::Color::RED),
-            ),
+            ).reply(true),
         )
         .await?;
         return Ok(());
@@ -39,7 +39,7 @@ pub async fn top(
                     .title("Fok u")
                     .description("Нельзя меньше 1 на странице")
                     .color(serenity::Color::RED),
-            ),
+            ).reply(true),
         )
         .await?;
         return Ok(());
@@ -86,7 +86,7 @@ pub async fn top(
         }
     };
 
-    ctx.send(reply).await?;
+    ctx.send(reply.reply(true)).await?;
 
     // Loop through incoming interactions with the navigation buttons
     let mut current_page: usize = 0;

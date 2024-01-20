@@ -22,7 +22,7 @@ pub async fn reset(ctx: Context<'_>) -> Result<(), Error> {
                 serenity::CreateEmbed::default()
                     .title("Ты уже стирал себе ASS")
                     .color(serenity::Color::RED),
-            ),
+            ).reply(true),
         )
         .await?;
         return Ok(());
@@ -35,7 +35,7 @@ pub async fn reset(ctx: Context<'_>) -> Result<(), Error> {
                 .description("Можешь крутить себе таймли снова")
                 .color(serenity::Color::RED)
                 .author(serenity::CreateEmbedAuthor::new(user.name.clone()).icon_url(user.face())),
-        ),
+        ).reply(true),
     )
     .await?;
 

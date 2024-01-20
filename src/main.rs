@@ -1,13 +1,10 @@
 #![feature(async_closure)]
 
-use std::sync::Arc;
-
 use crate::models::database::{ActiveCustomVoice, Player};
 use database::get_connection;
 use models::{config::CustomVoice, database::Config};
 use ormlite::{postgres::PgConnection, Connection, Model};
 use poise::{serenity_prelude as serenity, CreateReply, FrameworkError};
-use tokio::sync::RwLock;
 use tracing_subscriber::{
     fmt::{self, time::ChronoLocal},
     layer::SubscriberExt,
@@ -149,7 +146,7 @@ async fn on_error(error: poise::FrameworkError<'_, Data, Error>) {
                         .title("Ой! Ошибка!")
                         .description(&error.to_string())
                         .color(serenity::Color::RED),
-                ),
+                ).reply(true),
             )
             .await
             .map(|_| ())
