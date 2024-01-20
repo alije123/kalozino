@@ -178,15 +178,7 @@ pub async fn get_page_str(
                 .to_user(&ctx)
                 .await
                 .unwrap();
-            let guild = ctx.guild().and_then(|guild| Some(guild.to_owned()));
-            let mut user_name = user.global_name.clone().unwrap_or(user.name.clone());
-            if let Some(guild) = guild {
-                if let Ok(member) = guild.member(&ctx, user.id).await {
-                    if let Some(nick) = member.nick.clone() {
-                        user_name = nick;
-                    }
-                }
-            }
+            let user_name = user.global_name.clone().unwrap_or(user.name.clone());
             let mention = user.mention().to_string();
             let _ = writeln!(
                 output,
