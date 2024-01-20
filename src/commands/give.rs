@@ -20,7 +20,7 @@ pub async fn give(
                     .title("Ну ты и еблан!")
                     .description("Если ты кинешь отрицательную сумму, то получается чел тебе ещё должен останется, для этого есть steal")
                     .color(serenity::Color::RED),
-                ).reply(true),
+                ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
             )
             .await?;
         return Ok(());
@@ -33,7 +33,7 @@ pub async fn give(
                     .title("ваопдлвпоуклдпоплпоук")
                     .description("Нельзя кинуть деньги самому себе")
                     .color(serenity::Color::RED),
-            ).reply(true),
+            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -51,7 +51,7 @@ pub async fn give(
                     .title("Эммм")
                     .description("Как ты можешь кинуть кому-то в ебало денег, если ты даже не участвуешь в каловом казино?")
                     .color(serenity::Color::RED),
-            ).reply(true),
+            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -63,7 +63,7 @@ pub async fn give(
                     .title("Ну ты вообще придурок")
                     .description("Ты не можешь кинуть больше денег, чем у тебя есть, это создаст чёрную дыру во вселенной")
                     .color(serenity::Color::RED),
-            ).reply(true),
+            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -96,7 +96,7 @@ pub async fn give(
                 )))
                 .author(serenity::CreateEmbedAuthor::new(user.name.clone()).icon_url(user.face()))
                 .color(serenity::Color::DARK_GREEN),
-        ).reply(true),
+        ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
     )
     .await?;
     Ok(())

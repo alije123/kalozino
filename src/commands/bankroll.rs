@@ -23,7 +23,7 @@ pub async fn bankroll(
                     .title("Ошибка")
                     .description("Нельзя проебать 0 денег")
                     .color(serenity::Color::RED),
-            ).reply(true),
+            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -36,7 +36,7 @@ pub async fn bankroll(
                     .title("Ошибка")
                     .description("Нельзя ставить отрицательно")
                     .color(serenity::Color::RED),
-            ).reply(true),
+            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -65,7 +65,7 @@ pub async fn bankroll(
                     .author(
                         serenity::CreateEmbedAuthor::new(user.name.clone()).icon_url(user.face()),
                     ),
-            ).reply(true),
+            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -100,7 +100,7 @@ pub async fn bankroll(
                 .icon_url(user.face())
             )
                             .thumbnail("https://cdn.discordapp.com/attachments/1185987026365980712/1187416807510921389/dd6da43f4c650568.png?ex=6596cf14&is=65845a14&hm=97ace7cd7675207bf7d172834542a9b8d15a4d5d1049c886f82a028801360c3a&")
-                        ).reply(true),
+                        ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
                     ).await?;
         }
         PossibleRewards::Back => {
@@ -114,7 +114,7 @@ pub async fn bankroll(
                 .icon_url(user.face())
             )
                             .thumbnail("https://cdn.discordapp.com/attachments/1185987026365980712/1187416807917748264/ccf4d09fd133a480.png?ex=6596cf14&is=65845a14&hm=a2e744b1a1591d2572e2dd2ef8a41f33c8533db01aa06268da21cc4423077618&")
-            ).reply(true)).await?;
+            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false))).await?;
         }
         PossibleRewards::Two => {
             player.balance += bet * 2.0;
@@ -128,7 +128,7 @@ pub async fn bankroll(
                 .icon_url(user.face())
             )
                     .thumbnail("https://cdn.discordapp.com/attachments/1185987026365980712/1187416805736730705/2.png?ex=6596cf13&is=65845a13&hm=7f6b359e4b1350d1f32a258a861f6ee72d5bb8070df4f4a94bbf3da50f62741d&")
-                ).reply(true),
+                ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
             )
             .await?;
         }
@@ -144,7 +144,7 @@ pub async fn bankroll(
                 .icon_url(user.face())
             )
                     .thumbnail("https://cdn.discordapp.com/attachments/1185987026365980712/1187416807158579321/4.png?ex=6596cf13&is=65845a13&hm=ffdaf63ba4985b5c5d6207829476ad5d8922f80d0ab7d22ded1ee8a1a21dc146&")
-                ).reply(true),
+                ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
             ).await?;
         }
         PossibleRewards::Six => {
@@ -159,7 +159,7 @@ pub async fn bankroll(
                 .icon_url(user.face())
             )
                     .thumbnail("https://cdn.discordapp.com/attachments/1185987026365980712/1187416806810472614/4-1.png?ex=6596cf13&is=65845a13&hm=591fbb82c0fdd9b1956edbbfdf6739e65bfa8f67c1e37a40ac0e0ff5b3c03f7b&")
-                ).reply(true),
+                ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
             )
             .await?;
         }
@@ -175,7 +175,7 @@ pub async fn bankroll(
                 .icon_url(user.face())
             )
                     .thumbnail("https://cdn.discordapp.com/attachments/1185987026365980712/1187416806147760258/10.png?ex=6596cf13&is=65845a13&hm=51f5fe059a59f281ccf0db8e7cc7a1da87036642cc9dd65752d76c2beb808fc5&")
-                ).reply(true),
+                ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
             )
             .await?;
         }

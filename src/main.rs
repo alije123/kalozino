@@ -146,7 +146,7 @@ async fn on_error(error: poise::FrameworkError<'_, Data, Error>) {
                         .title("Ой! Ошибка!")
                         .description(&error.to_string())
                         .color(serenity::Color::RED),
-                ).reply(true),
+                ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
             )
             .await
             .map(|_| ())

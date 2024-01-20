@@ -24,7 +24,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                         .description("Какого хуя ты захотел у меня спиздить деньги")
                         .color(serenity::Color::RED),
                 )
-                .reply(true),
+                .reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -37,7 +37,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                         .description("Боты не играют в каволое казино")
                         .color(serenity::Color::RED),
                 )
-                .reply(true),
+                .reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -48,7 +48,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                     .title("Стой стой!")
                     .description("Я уберегаю тебя от впустую потраченной попытки стила самого себя, используй её разумно пж")
                     .color(serenity::Color::RED),
-            ).reply(true),
+            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -88,7 +88,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                     )))
                     .color(serenity::Color::RED)
                     .thumbnail("https://cdn.discordapp.com/emojis/769587992972230668.webp?quality=lossless"),
-            ).reply(true),
+            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -135,7 +135,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                                         .icon_url(user_to_steal.face()),
                                 ),
                         )
-                        .reply(true),
+                        .reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
                 )
                 .await?;
                 return Ok(());
@@ -167,7 +167,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                                     .icon_url(user.face()),
                             ),
                     )
-                    .reply(true),
+                    .reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
             )
             .await?;
         }
@@ -184,7 +184,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                             ))
                             .color(serenity::Color::RED),
                     )
-                    .reply(true),
+                    .reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
             )
             .await?;
         }
@@ -202,7 +202,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                         player.balance, user_to_steal.name)))
                     .color(serenity::Color::DARK_GREEN)
                     .author(serenity::CreateEmbedAuthor::new(user.name.clone())
-                .icon_url(user.face()))).reply(true))
+                .icon_url(user.face()))).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)))
             .await?;
         }
     }

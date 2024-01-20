@@ -24,7 +24,7 @@ pub async fn balance(
                         .description("Ты чо еблан какой баланс у ботов")
                         .color(serenity::Color::RED),
                 )
-                .reply(true),
+                .reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -46,7 +46,7 @@ pub async fn balance(
                 .icon_url(user.face())
             ).thumbnail("https://cdn.discordapp.com/attachments/1185987026365980712/1185992875134177341/Frame_145.png?ex=6591a0f0&is=657f2bf0&hm=e71b3c75aaa10c5c40f1e994acbd7e8844a0e879e6c80e53f75d446308ab4e94&")
             .color(serenity::Color::MEIBE_PINK)
-        ).reply(true),
+        ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
     ).await?;
     Ok(())
 }
