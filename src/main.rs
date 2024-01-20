@@ -97,6 +97,7 @@ async fn main() {
             on_error: |error| Box::pin(on_error(error)),
             pre_command: |ctx| {
                 Box::pin(async move {
+                    let _ = ctx.defer_or_broadcast().await;
                     tracing::info!(
                         "{}({}) executed command {}",
                         ctx.author().name,
