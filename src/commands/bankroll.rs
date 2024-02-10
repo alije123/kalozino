@@ -18,12 +18,15 @@ pub async fn bankroll(
 ) -> Result<(), Error> {
     if bet == 0.0 {
         ctx.send(
-            CreateReply::default().embed(
-                serenity::CreateEmbed::default()
-                    .title("Ошибка")
-                    .description("Нельзя проебать 0 денег")
-                    .color(serenity::Color::RED),
-            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+            CreateReply::default()
+                .embed(
+                    serenity::CreateEmbed::default()
+                        .title("Ошибка")
+                        .description("Нельзя проебать 0 денег")
+                        .color(serenity::Color::RED),
+                )
+                .reply(true)
+                .allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -31,12 +34,15 @@ pub async fn bankroll(
 
     if bet < 0.0 {
         ctx.send(
-            CreateReply::default().embed(
-                serenity::CreateEmbed::default()
-                    .title("Ошибка")
-                    .description("Нельзя ставить отрицательно")
-                    .color(serenity::Color::RED),
-            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+            CreateReply::default()
+                .embed(
+                    serenity::CreateEmbed::default()
+                        .title("Ошибка")
+                        .description("Нельзя ставить отрицательно")
+                        .color(serenity::Color::RED),
+                )
+                .reply(true)
+                .allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -57,15 +63,19 @@ pub async fn bankroll(
 
     if bet > player.balance {
         ctx.send(
-            CreateReply::default().embed(
-                serenity::CreateEmbed::default()
-                    .title("Ошибка")
-                    .description("Нельзя проебать больше, чем у тебя есть")
-                    .color(serenity::Color::RED)
-                    .author(
-                        serenity::CreateEmbedAuthor::new(user.name.clone()).icon_url(user.face()),
-                    ),
-            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+            CreateReply::default()
+                .embed(
+                    serenity::CreateEmbed::default()
+                        .title("Ошибка")
+                        .description("Нельзя проебать больше, чем у тебя есть")
+                        .color(serenity::Color::RED)
+                        .author(
+                            serenity::CreateEmbedAuthor::new(user.name.clone())
+                                .icon_url(user.face()),
+                        ),
+                )
+                .reply(true)
+                .allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -82,10 +92,22 @@ pub async fn bankroll(
     let weights = [8.0, 0.0008, 8.0, 0.1, 0.001, 0.00002];
     let dist = WeightedIndex::new(&weights)?;
 
-    let reward_multiplier = {
+    let initial_value = {
         let mut rng = rand::thread_rng();
-        &choices[dist.sample(&mut rng)]
+        dist.sample(&mut rng)
     };
+
+    let reward_multiplier_num = {
+        let mut rng = rand::thread_rng();
+        let mut temp_reward_multiplier = dist.sample(&mut rng);
+        if initial_value != temp_reward_multiplier {
+            temp_reward_multiplier = temp_reward_multiplier.checked_div(1).unwrap_or(0);
+        }
+
+        temp_reward_multiplier
+    };
+
+    let reward_multiplier = &choices[reward_multiplier_num];
 
     match reward_multiplier {
         PossibleRewards::None => {

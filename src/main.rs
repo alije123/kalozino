@@ -1,5 +1,3 @@
-#![feature(async_closure)]
-
 use crate::models::database::{ActiveCustomVoice, Player};
 use database::get_connection;
 use models::{config::CustomVoice, database::Config};

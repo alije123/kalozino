@@ -195,6 +195,7 @@ pub async fn reset_timely(
     player.timely_end_at = Some(end);
     player.timely_last_at = Some(Utc::now());
     player.balance += value;
+    player.timely_last_value = Some(value);
 
     match reason {
         ResetReason::SkippedDay => {

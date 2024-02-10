@@ -22,24 +22,30 @@ pub async fn top(
     let on_page = on_page.unwrap_or(10usize);
     if on_page > 20 {
         ctx.send(
-            CreateReply::default().embed(
-                serenity::CreateEmbed::default()
-                    .title("Fok u")
-                    .description("Нельзя больше 20 на странице")
-                    .color(serenity::Color::RED),
-            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+            CreateReply::default()
+                .embed(
+                    serenity::CreateEmbed::default()
+                        .title("Fok u")
+                        .description("Нельзя больше 20 на странице")
+                        .color(serenity::Color::RED),
+                )
+                .reply(true)
+                .allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
     }
     if on_page < 1 {
         ctx.send(
-            CreateReply::default().embed(
-                serenity::CreateEmbed::default()
-                    .title("Fok u")
-                    .description("Нельзя меньше 1 на странице")
-                    .color(serenity::Color::RED),
-            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+            CreateReply::default()
+                .embed(
+                    serenity::CreateEmbed::default()
+                        .title("Fok u")
+                        .description("Нельзя меньше 1 на странице")
+                        .color(serenity::Color::RED),
+                )
+                .reply(true)
+                .allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -62,16 +68,17 @@ pub async fn top(
     let reply = {
         // Send the embed with the first page as content
 
-        let create_reply = crate::CreateReply::default().embed(
-            serenity::CreateEmbed::default()
-                .title("Топ по балансу")
-                .description(get_page_str(&mut db, ctx, on_page, 0).await?)
-                .color(serenity::Color::BLUE)
-                .footer(serenity::CreateEmbedFooter::new(format!(
-                    "Страница {}/{}",
-                    1, total_pages
-                ))),
-        );
+        let mut embed = serenity::CreateEmbed::default()
+            .title("Топ по балансу")
+            .description(get_page_str(&mut db, ctx, on_page, 0).await?)
+            .color(serenity::Color::BLUE);
+        if total_pages != 1 {
+            embed = embed.footer(serenity::CreateEmbedFooter::new(format!(
+                "Страница {}/{}",
+                1, total_pages
+            )));
+        }
+        let create_reply = crate::CreateReply::default().embed(embed);
 
         if len > on_page {
             let components = serenity::CreateActionRow::Buttons(vec![
@@ -86,7 +93,12 @@ pub async fn top(
         }
     };
 
-    ctx.send(reply.reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false))).await?;
+    ctx.send(
+        reply
+            .reply(true)
+            .allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+    )
+    .await?;
 
     // Loop through incoming interactions with the navigation buttons
     let mut current_page: usize = 0;

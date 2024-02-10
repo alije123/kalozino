@@ -15,16 +15,20 @@ use crate::{create_player, database::get_connection, models::database::Player, C
 #[poise::command(slash_command, prefix_command, guild_only)]
 pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
     let user = ctx.author();
+    let author = serenity::CreateEmbedAuthor::new(format!("{} пиздит у {}", user.name, user_to_steal.name))
+        .icon_url(user.face());
     if user_to_steal.id == ctx.framework().bot_id {
         ctx.send(
             CreateReply::default()
                 .embed(
                     serenity::CreateEmbed::default()
+                        .author(author)
                         .title("Ты что ахуел??")
                         .description("Какого хуя ты захотел у меня спиздить деньги")
                         .color(serenity::Color::RED),
                 )
-                .reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+                .reply(true)
+                .allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -33,11 +37,13 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
             CreateReply::default()
                 .embed(
                     serenity::CreateEmbed::default()
+                        .author(author)
                         .title("Ты чо еблан какой стил ботов")
                         .description("Боты не играют в каволое казино")
                         .color(serenity::Color::RED),
                 )
-                .reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+                .reply(true)
+                .allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -45,6 +51,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
         ctx.send(
             CreateReply::default().embed(
                 serenity::CreateEmbed::default()
+                .author(author)
                     .title("Стой стой!")
                     .description("Я уберегаю тебя от впустую потраченной попытки стила самого себя, используй её разумно пж")
                     .color(serenity::Color::RED),
@@ -80,6 +87,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
         ctx.send(
             CreateReply::default().embed(
                 serenity::CreateEmbed::default()
+                .author(author)
                     .title("Кажется с последнего стила день ещё не прошёл")
                     .description("Но ты скоро сможешь снова спиздить деньги")
                     .footer(serenity::CreateEmbedFooter::new(format!(
@@ -103,7 +111,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
         None => create_player(ctx, user_to_steal.clone(), &mut db).await?,
     };
 
-    let choices = [StealChoice::Steal, StealChoice::Fail, StealChoice::StealAll];
+    let choices: [StealChoice; 3] = [StealChoice::Steal, StealChoice::Fail, StealChoice::StealAll];
     let weights = [1.0, 1.0, 0.000001];
     let dist = WeightedIndex::new(&weights)?;
 
@@ -124,18 +132,18 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                     CreateReply::default()
                         .embed(
                             serenity::CreateEmbed::default()
+                                .author(author)
                                 .title("Бедный чел")
                                 .description("У него нет денег, а собрался у него пиздить")
                                 .footer(serenity::CreateEmbedFooter::new(
                                     "Попробуй спиздить у кого-то другого",
                                 ))
-                                .color(serenity::Color::RED)
-                                .author(
-                                    serenity::CreateEmbedAuthor::new(user_to_steal.name.clone())
-                                        .icon_url(user_to_steal.face()),
-                                ),
+                                .color(serenity::Color::RED),
                         )
-                        .reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+                        .reply(true)
+                        .allowed_mentions(
+                            serenity::CreateAllowedMentions::default().replied_user(false),
+                        ),
                 )
                 .await?;
                 return Ok(());
@@ -150,6 +158,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                 CreateReply::default()
                     .embed(
                         serenity::CreateEmbed::default()
+                            .author(author)
                             .title(format!(
                                 "Ты успешно спиздил {:.2} деньжат у {}",
                                 amount, user_to_steal.name
@@ -161,13 +170,12 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                             .footer(serenity::CreateEmbedFooter::new(
                                 "Следующая попытка будет через день",
                             ))
-                            .color(serenity::Color::DARK_GREEN)
-                            .author(
-                                serenity::CreateEmbedAuthor::new(user.name.clone())
-                                    .icon_url(user.face()),
-                            ),
+                            .color(serenity::Color::DARK_GREEN),
                     )
-                    .reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+                    .reply(true)
+                    .allowed_mentions(
+                        serenity::CreateAllowedMentions::default().replied_user(false),
+                    ),
             )
             .await?;
         }
@@ -177,14 +185,15 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                 CreateReply::default()
                     .embed(
                         serenity::CreateEmbed::default()
+                            .author(author)
                             .title("Сегодня не получилось спиздить")
-                            .description("Попробуй завтра")
-                            .footer(serenity::CreateEmbedFooter::new(
-                                "Следующая попытка будет через день",
-                            ))
+                            .description("Попробуй через день")
                             .color(serenity::Color::RED),
                     )
-                    .reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+                    .reply(true)
+                    .allowed_mentions(
+                        serenity::CreateAllowedMentions::default().replied_user(false),
+                    ),
             )
             .await?;
         }
@@ -193,7 +202,9 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
             player.last_steal_at = Some(Utc::now());
             ctx.send(
                 CreateReply::default().embed(
-                    serenity::CreateEmbed::default().title("АХАХАХАХАХАХАХАХА")
+                    serenity::CreateEmbed::default()
+                    .author(author)
+                    .title("АХАХАХАХАХАХАХАХА")
                     .description(format!(
                         "Ты спиздил у {} все ({:.2})  деньги",
                         user_to_steal.name, player_to_steal.balance
@@ -201,8 +212,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
                     .footer(serenity::CreateEmbedFooter::new(format!("Теперь у тебя на балансе {:.2}, а у {} нет денег вообще. Следующая попытка будет через день",
                         player.balance, user_to_steal.name)))
                     .color(serenity::Color::DARK_GREEN)
-                    .author(serenity::CreateEmbedAuthor::new(user.name.clone())
-                .icon_url(user.face()))).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)))
+                    ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)))
             .await?;
         }
     }

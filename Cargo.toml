@@ -3,15 +3,13 @@ name = "kalozino"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 dotenvy = "0.15.7"
 poise = { version = "0.6.1", features = ["cache", "chrono", "handle_panics"] }
 tokio = { version = "1.35.1", features = ["tracing", "full"] }
 serde = { version = "1.0", features = ["derive", "alloc"] }
-chrono = { version = "0.4.31", features = ["serde"] }
-rand = { version = "0.8.5", features = ["nightly"] }
+chrono = { version = "0.4", features = ["serde"] }
+rand = { version = "0.8" }
 ormlite = { version = "0.18.0", features = [
     "default-postgres",
     "chrono",
