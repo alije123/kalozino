@@ -5,17 +5,17 @@ edition = "2021"
 
 [dependencies]
 dotenvy = "0.15.7"
-poise = { version = "0.6.1", features = ["cache", "chrono", "handle_panics"] }
-tokio = { version = "1.35.1", features = ["tracing", "full"] }
+poise = { version = "0.6", features = ["cache", "chrono", "handle_panics"] }
+tokio = { version = "1", features = ["tracing", "full"] }
 serde = { version = "1.0", features = ["derive", "alloc"] }
 chrono = { version = "0.4", features = ["serde"] }
 rand = { version = "0.8" }
-ormlite = { version = "0.18.0", features = [
+ormlite = { version = "0.18", features = [
     "default-postgres",
     "chrono",
     "uuid",
 ] }
-uuid = { version = "1.6.1", features = ["serde"] }
+uuid = { version = "1.6", features = ["serde"] }
 serde_json = { version = "1.0", features = ["alloc"] }
 tracing = { version = "0.1", features = [
     "async-await",
@@ -30,6 +30,6 @@ tracing-subscriber = { version = "0.3", features = [
     "serde",
     "tracing-serde",
 ] }
-tracing-appender = "0.2.3"
-anyhow = { version = "1.0.79", features = ["backtrace"] }
+tracing-appender = "0.2"
+anyhow = { version = "1.0", features = ["backtrace"] }
 futures = "0.3.30"

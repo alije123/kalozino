@@ -75,7 +75,7 @@ async fn main() {
             commands: vec![
                 commands::balance::balance(),
                 commands::timely::timely(),
-                commands::bankroll::bankroll(),
+                commands::betroll::betroll(),
                 commands::reset::reset(),
                 commands::steal::steal(),
                 commands::set_custom_voice_spawn::set_custom_voice_spawn(),

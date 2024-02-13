@@ -3,14 +3,14 @@ use poise::{
     serenity_prelude::{self as serenity},
     CreateReply,
 };
-use rand::distributions::{Distribution, WeightedIndex};
+use rand::Rng;
 
 use crate::{create_player, database::get_connection, models::database::Player, Context, Error};
 
 /// Проебать свои деньги, или же выиграть больше?
 #[tracing::instrument]
 #[poise::command(slash_command, prefix_command, guild_only, aliases("br"))]
-pub async fn bankroll(
+pub async fn betroll(
     ctx: Context<'_>,
     #[description = "Сколько денег хочешь проебать"]
     #[min = 0.0000000001]
@@ -81,33 +81,19 @@ pub async fn bankroll(
         return Ok(());
     }
 
-    let choices = [
-        PossibleRewards::None,
-        PossibleRewards::Back,
-        PossibleRewards::Two,
-        PossibleRewards::Four,
-        PossibleRewards::Six,
-        PossibleRewards::Ten,
-    ];
-    let weights = [8.0, 0.0008, 8.0, 0.1, 0.001, 0.00002];
-    let dist = WeightedIndex::new(&weights)?;
-
-    let initial_value = {
+    let roll = {
         let mut rng = rand::thread_rng();
-        dist.sample(&mut rng)
+        rng.gen_range(0..=101)
     };
 
-    let reward_multiplier_num = {
-        let mut rng = rand::thread_rng();
-        let mut temp_reward_multiplier = dist.sample(&mut rng);
-        if initial_value != temp_reward_multiplier {
-            temp_reward_multiplier = temp_reward_multiplier.checked_div(1).unwrap_or(0);
-        }
-
-        temp_reward_multiplier
+    let reward_multiplier = match roll {
+        0 => PossibleRewards::Back,
+        66..=89 => PossibleRewards::Two,
+        90..=92 => PossibleRewards::Four,
+        93..=98 => PossibleRewards::Six,
+        99.. => PossibleRewards::Ten,
+        _ => PossibleRewards::None,
     };
-
-    let reward_multiplier = &choices[reward_multiplier_num];
 
     match reward_multiplier {
         PossibleRewards::None => {
@@ -139,7 +125,7 @@ pub async fn bankroll(
             ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false))).await?;
         }
         PossibleRewards::Two => {
-            player.balance += bet * 2.0;
+            player.balance += bet;
             ctx.send(
                 CreateReply::default().embed(
                     serenity::CreateEmbed::default().title("Китай партия выдать тебе 2х")
@@ -155,12 +141,12 @@ pub async fn bankroll(
             .await?;
         }
         PossibleRewards::Four => {
-            player.balance += bet * 4.0;
+            player.balance += bet * 3.0;
             ctx.send(
                 CreateReply::default().embed(
                     serenity::CreateEmbed::default().title("Китай партия выдать тебе 4х")
-                    .description("К твоему балансу прибавить 4х сумму ставки")
-                    .footer(serenity::CreateEmbedFooter::new(format!("Ты выиграть +{:.2}. На твоем счету теперь: {:.2}", bet * 4.0, player.balance)))
+                    .description("К твоему балансу прибавить 3х сумму ставки")
+                    .footer(serenity::CreateEmbedFooter::new(format!("Ты выиграть +{:.2}. На твоем счету теперь: {:.2}", bet * 3.0, player.balance)))
                     .color(serenity::Color::DARK_GREEN)
                     .author(serenity::CreateEmbedAuthor::new(user.name.clone())
                 .icon_url(user.face())
@@ -170,12 +156,12 @@ pub async fn bankroll(
             ).await?;
         }
         PossibleRewards::Six => {
-            player.balance += bet * 6.0;
+            player.balance += bet * 5.0;
             ctx.send(
                 CreateReply::default().embed(
                     serenity::CreateEmbed::default().title("ОГО! 6х!")
                     .description("Китай партия к твоему балансу прибавить 6х сумму ставки")
-                    .footer(serenity::CreateEmbedFooter::new(format!("Ты выиграть +{:.2}. На твоем счету теперь: {:.2}", bet * 6.0, player.balance)))
+                    .footer(serenity::CreateEmbedFooter::new(format!("Ты выиграть +{:.2}. На твоем счету теперь: {:.2}", bet * 5.0, player.balance)))
                     .color(serenity::Color::PURPLE)
                     .author(serenity::CreateEmbedAuthor::new(user.name.clone())
                 .icon_url(user.face())
@@ -186,12 +172,12 @@ pub async fn bankroll(
             .await?;
         }
         PossibleRewards::Ten => {
-            player.balance += bet * 10.0;
+            player.balance += bet * 9.0;
             ctx.send(
                 CreateReply::default().embed(
                     serenity::CreateEmbed::default().title("МЕГА ВИН! 10х! АХУЕТЬ!")
                     .description("操Китай партия к твоему балансу прибавить 10х сумму ставки")
-                    .footer(serenity::CreateEmbedFooter::new(format!("Ты выиграть +{:.2}. На твоем счету теперь: {:.2}", bet * 10.0, player.balance)))
+                    .footer(serenity::CreateEmbedFooter::new(format!("Ты выиграть +{:.2}. На твоем счету теперь: {:.2}", bet * 9.0, player.balance)))
                     .color(serenity::Color::GOLD)
                     .author(serenity::CreateEmbedAuthor::new(user.name.clone())
                 .icon_url(user.face())
