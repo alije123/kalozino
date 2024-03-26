@@ -3,15 +3,22 @@ use std::fmt::Write;
 use futures::{stream, StreamExt};
 use ormlite::{postgres::PgConnection, Model, Row};
 use poise::{
-    serenity_prelude::{self as serenity, Mentionable},
+    serenity_prelude::{self as serenity},
     CreateReply,
 };
+use poise::serenity_prelude::Mentionable;
 
 use crate::{database::get_connection, models::database::Player, Context, Error};
 
 /// Топ лучших на свете людей
 #[tracing::instrument]
-#[poise::command(slash_command, prefix_command, guild_only, aliases("%"))]
+#[poise::command(
+    slash_command,
+    prefix_command,
+    guild_only,
+    aliases("%"),
+    help_text_fn = "help_text"
+)]
 pub async fn top(
     ctx: Context<'_>,
     #[max = 20]
@@ -166,6 +173,13 @@ pub async fn top(
             .await?;
     }
     Ok(())
+}
+
+fn help_text() -> String {
+    serenity::MessageBuilder::new()
+        .push("Ну сука ты drinkанутый на миллиард процентов, команда пишется легко и просто: ")
+        .push_mono("(/|!)top|% кол-во-пользователей-на-странице (по умолчанию 10)")
+        .build()
 }
 
 pub async fn get_page_str(

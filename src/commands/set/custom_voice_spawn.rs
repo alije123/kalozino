@@ -21,7 +21,7 @@ use crate::{
     required_bot_permissions = "MANAGE_CHANNELS",
     default_member_permissions = "MANAGE_CHANNELS | MOVE_MEMBERS"
 )]
-pub async fn set_custom_voice_spawn(
+pub async fn custom_voice_spawn(
     ctx: Context<'_>,
     #[channel_types("Voice")] channel: serenity::Channel,
 ) -> Result<(), Error> {
@@ -30,12 +30,15 @@ pub async fn set_custom_voice_spawn(
     };
     if guild_channel.kind != serenity::ChannelType::Voice {
         ctx.send(
-            CreateReply::default().embed(
-                serenity::CreateEmbed::default()
-                    .title("Fok u!")
-                    .description("Это не войс!")
-                    .color(serenity::Color::RED),
-            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+            CreateReply::default()
+                .embed(
+                    serenity::CreateEmbed::default()
+                        .title("Fok u!")
+                        .description("Это не войс!")
+                        .color(serenity::Color::RED),
+                )
+                .reply(true)
+                .allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -47,8 +50,8 @@ pub async fn set_custom_voice_spawn(
                 serenity::CreateEmbed::default().title("Uh oh!")
                     .description("Я не вижу в какой категории находится этот канал, наверное к ней у меня нет доступа")
                     .color(serenity::Color::RED)
-                ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
-            )
+            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+        )
             .await?;
         return Ok(());
     };
@@ -60,6 +63,7 @@ pub async fn set_custom_voice_spawn(
         .await?
         .unwrap_or(Config {
             key: "custom_voice".to_string(),
+            server_id: guild_channel.guild_id.get() as i64,
             data: Json(serde_json::Value::Null),
         });
     let data = json!(CustomVoice {
@@ -73,15 +77,18 @@ pub async fn set_custom_voice_spawn(
     };
 
     ctx.send(
-        CreateReply::default().embed(
-            serenity::CreateEmbed::default()
-                .title("O'gay!")
-                .description(format!(
-                    "Войс {} установлен как войс чат для спавна войсов",
-                    guild_channel.name,
-                ))
-                .color(serenity::Color::ORANGE),
-        ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+        CreateReply::default()
+            .embed(
+                serenity::CreateEmbed::default()
+                    .title("O'gay!")
+                    .description(format!(
+                        "Войс {} установлен как войс чат для спавна войсов",
+                        guild_channel.name,
+                    ))
+                    .color(serenity::Color::ORANGE),
+            )
+            .reply(true)
+            .allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
     )
     .await?;
 

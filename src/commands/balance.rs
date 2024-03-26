@@ -1,14 +1,18 @@
 use ormlite::Model;
-use poise::{
-    serenity_prelude::{self as serenity},
-    CreateReply,
-};
+use poise::{CreateReply, serenity_prelude as serenity};
 
-use crate::{create_player, database::get_connection, models::database::Player, Context, Error};
+use crate::{Context, database::get_connection, Error, models::database::Player};
+use crate::utils::create_player;
 
 /// Узнай свой ебаный баланс
 #[tracing::instrument]
-#[poise::command(slash_command, prefix_command, guild_only, aliases("$"))]
+#[poise::command(
+    slash_command,
+    prefix_command,
+    guild_only,
+    aliases("$"),
+    help_text_fn = "help_text"
+)]
 pub async fn balance(
     ctx: Context<'_>,
     #[description = "Выбери чела если хош"] user: Option<serenity::User>,
@@ -24,7 +28,8 @@ pub async fn balance(
                         .description("Ты чо еблан какой баланс у ботов")
                         .color(serenity::Color::RED),
                 )
-                .reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+                .reply(true)
+                .allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -49,4 +54,11 @@ pub async fn balance(
         ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
     ).await?;
     Ok(())
+}
+
+fn help_text() -> String {
+    serenity::MessageBuilder::new()
+        .push("Еблан, команда должна быть такая: ")
+        .push_mono("(/|!)balance|$ @пользователь-хуёльзователь|айди (можно не указывать бля)")
+        .build()
 }

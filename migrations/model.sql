@@ -1,49 +1,66 @@
-CREATE TABLE "players" (
-    "id" bigint NOT NULL PRIMARY KEY,
-    "balance" double precision NOT NULL,
-    "timely_last_at" timestamptz,
+create table "players"
+(
+    "id"                bigint           not null PRIMARY KEY,
+    "balance"           double precision not null,
+    "timely_last_at"    timestamptz,
     "timely_last_value" double precision,
-    "timely_end_at" timestamptz,
-    "last_steal_at" timestamptz
+    "timely_end_at"     timestamptz,
+    "last_steal_at"     timestamptz
 );
 
-CREATE TABLE "active_custom_voices" (
-    "id" bigint NOT NULL PRIMARY KEY,
-    "owner_id" bigint NOT NULL REFERENCES players (id) ON DELETE CASCADE
+create table "active_custom_voices"
+(
+    "id"       bigint not null PRIMARY KEY,
+    "owner_id" bigint not null references players (id) on delete cascade
 );
 
-CREATE TABLE "voice_config" (
-    "id" uuid NOT NULL PRIMARY KEY,
-    "user_id" bigint NOT NULL REFERENCES players (id) ON DELETE CASCADE,
-    "parameter" character varying NOT NULL,
-    "value" character varying NOT NULL
+create table "voice_config"
+(
+    "id"        uuid              not null PRIMARY KEY,
+    "user_id"   bigint            not null references players (id) on delete cascade,
+    "parameter" character varying not null,
+    "value"     character varying not null
 );
 
-CREATE TABLE "twinks" (
-    "id" uuid NOT NULL PRIMARY KEY,
-    "user_id" bigint NOT NULL REFERENCES players (id) ON DELETE CASCADE,
-    "twink_id" bigint NOT NULL REFERENCES players (id) ON DELETE CASCADE
+create table "twinks"
+(
+    "id"       uuid   not null PRIMARY KEY,
+    "user_id"  bigint not null references players (id) on delete cascade,
+    "twink_id" bigint not null references players (id) on delete cascade
 );
 
-CREATE TABLE "shop" (
-    "id" uuid NOT NULL PRIMARY KEY,
-    "name" character varying NOT NULL,
-    "price" double precision NOT NULL,
-    "description" character varying NOT NULL,
-    "item_type" character varying NOT NULL,
-    "role_id" bigint NOT NULL
+create table "shop"
+(
+    "id"          uuid              not null PRIMARY KEY,
+    "name"        character varying not null,
+    "price"       double precision  not null,
+    "description" character varying not null,
+    "item_type"   character varying not null,
+    "role_id"     bigint            not null
 );
 
-CREATE TABLE "history_journal" (
-    "id" uuid NOT NULL PRIMARY KEY,
-    "user_id" bigint NOT NULL,
-    "at" timestamptz NOT NULL,
-    "value" double precision NOT NULL,
-    "changed_by_id" bigint REFERENCES players (id),
-    "reason" character varying NOT NULL
+create table "history_journal"
+(
+    "id"            uuid              not null PRIMARY KEY,
+    "user_id"       bigint            not null,
+    "at"            timestamptz       not null,
+    "value"         double precision  not null,
+    "changed_by_id" bigint references players (id),
+    "reason"        character varying not null
 );
 
-CREATE TABLE "config" (
-    "key" character varying NOT NULL PRIMARY KEY,
-    "data" jsonb NOT NULL
-)
+create table "config"
+(
+    "key"       character varying not null,
+    "server_id" bigint            not null,
+    "data"      jsonb             not null,
+    PRIMARY KEY ("key", "server_id")
+);
+
+create table "starboard_messages"
+(
+    "message_id"           bigint primary key not null,
+    "server_id"            bigint             not null,
+    "forwarded_message_id" bigint             not null,
+    "last_reaction_count"  smallint           not null
+);

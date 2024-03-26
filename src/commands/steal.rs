@@ -1,22 +1,24 @@
 use chrono::{Duration, Utc};
 use ormlite::Model;
 use poise::{
-    serenity_prelude::{self as serenity, User},
     CreateReply,
+    serenity_prelude::{self as serenity, User},
 };
 use rand::{
     distributions::{Distribution, WeightedIndex},
     Rng,
 };
 
-use crate::{create_player, database::get_connection, models::database::Player, Context, Error};
+use crate::{Context, database::get_connection, Error, models::database::Player};
+use crate::utils::create_player;
 
 #[tracing::instrument]
-#[poise::command(slash_command, prefix_command, guild_only)]
+#[poise::command(slash_command, prefix_command, guild_only, help_text_fn = "help_text")]
 pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
     let user = ctx.author();
-    let author = serenity::CreateEmbedAuthor::new(format!("{} пиздит у {}", user.name, user_to_steal.name))
-        .icon_url(user.face());
+    let author =
+        serenity::CreateEmbedAuthor::new(format!("{} пиздит у {}", user.name, user_to_steal.name))
+            .icon_url(user.face());
     if user_to_steal.id == ctx.framework().bot_id {
         ctx.send(
             CreateReply::default()
@@ -77,7 +79,7 @@ pub async fn steal(ctx: Context<'_>, user_to_steal: User) -> Result<(), Error> {
         .is_some_and(|x| x + Duration::days(1) > Utc::now())
     {
         let duration_to_next_day =
-            (player.last_steal_at.unwrap() + Duration::days(1) - Utc::now()) as Duration;
+            player.last_steal_at.unwrap() + Duration::days(1) - Utc::now();
         let duration_str = format!(
             "{} ч. {} мин.",
             duration_to_next_day.num_hours(),
@@ -227,4 +229,11 @@ pub enum StealChoice {
     Steal,
     Fail,
     StealAll,
+}
+
+fn help_text() -> String {
+    serenity::MessageBuilder::new()
+        .push("Может тебе и не надо пиздить, раз команды не умеешь правильно писать? Учись ☝: ")
+        .push_mono("(/|!)steal @пользователь|айди-хуйди")
+        .build()
 }

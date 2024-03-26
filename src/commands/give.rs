@@ -1,11 +1,12 @@
 use ormlite::Model;
-use poise::{serenity_prelude as serenity, CreateReply};
+use poise::{CreateReply, serenity_prelude as serenity};
 
-use crate::{create_player, database::get_connection, models::database::Player, Context, Error};
+use crate::{Context, database::get_connection, Error, models::database::Player};
+use crate::utils::create_player;
 
 ///Кинуть деньги в ебало
 #[tracing::instrument]
-#[poise::command(slash_command, prefix_command, guild_only)]
+#[poise::command(slash_command, prefix_command, guild_only, help_text_fn = "help_text")]
 pub async fn give(
     ctx: Context<'_>,
     user_to_give: serenity::User,
@@ -28,12 +29,15 @@ pub async fn give(
     let user = ctx.author();
     if user.id == user_to_give.id {
         ctx.send(
-            CreateReply::default().embed(
-                serenity::CreateEmbed::default()
-                    .title("ваопдлвпоуклдпоплпоук")
-                    .description("Нельзя кинуть деньги самому себе")
-                    .color(serenity::Color::RED),
-            ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+            CreateReply::default()
+                .embed(
+                    serenity::CreateEmbed::default()
+                        .title("ваопдлвпоуклдпоплпоук")
+                        .description("Нельзя кинуть деньги самому себе")
+                        .color(serenity::Color::RED),
+                )
+                .reply(true)
+                .allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
         )
         .await?;
         return Ok(());
@@ -83,21 +87,33 @@ pub async fn give(
     let new_give_player_balance = give_player.balance;
     give_player.update_all_fields(&mut db).await?;
     ctx.send(
-        CreateReply::default().embed(
-            serenity::CreateEmbed::default()
-                .title(format!("Ты кинул в ебало денег {}", user_to_give.name))
-                .description(format!(
-                    "Он получил +{:.2}, теперь у него на балансе {:.2}",
-                    amount, new_give_player_balance
-                ))
-                .footer(serenity::CreateEmbedFooter::new(format!(
-                    "А у тебя -{:.2}, теперь на балансе: {:.2}",
-                    amount, new_player_balance
-                )))
-                .author(serenity::CreateEmbedAuthor::new(user.name.clone()).icon_url(user.face()))
-                .color(serenity::Color::DARK_GREEN),
-        ).reply(true).allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
+        CreateReply::default()
+            .embed(
+                serenity::CreateEmbed::default()
+                    .title(format!("Ты кинул в ебало денег {}", user_to_give.name))
+                    .description(format!(
+                        "Он получил +{:.2}, теперь у него на балансе {:.2}",
+                        amount, new_give_player_balance
+                    ))
+                    .footer(serenity::CreateEmbedFooter::new(format!(
+                        "А у тебя -{:.2}, теперь на балансе: {:.2}",
+                        amount, new_player_balance
+                    )))
+                    .author(
+                        serenity::CreateEmbedAuthor::new(user.name.clone()).icon_url(user.face()),
+                    )
+                    .color(serenity::Color::DARK_GREEN),
+            )
+            .reply(true)
+            .allowed_mentions(serenity::CreateAllowedMentions::default().replied_user(false)),
     )
     .await?;
     Ok(())
+}
+
+fn help_text() -> String {
+    serenity::MessageBuilder::new()
+        .push("Бля ну что ж с тобой делать? Вдупляй как команду надо писать: ")
+        .push_mono("(/|!)give @пользователь|айди сумма-хуюмма")
+        .build()
 }

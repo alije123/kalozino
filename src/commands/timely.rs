@@ -3,11 +3,12 @@ use ormlite::Model;
 use poise::{serenity_prelude as serenity, CreateReply};
 use rand::Rng;
 
-use crate::{create_player, database::get_connection, models::database::Player, Context, Error};
+use crate::utils::create_player;
+use crate::{database::get_connection, models::database::Player, Context, Error};
 
 #[tracing::instrument]
 /// Получай по ебалу каждый день
-#[poise::command(slash_command, prefix_command, guild_only)]
+#[poise::command(slash_command, prefix_command, guild_only, help_text_fn = "help_text")]
 pub async fn timely(ctx: Context<'_>) -> Result<(), Error> {
     let mut db = get_connection().await;
     let user = ctx.author();
@@ -22,9 +23,9 @@ pub async fn timely(ctx: Context<'_>) -> Result<(), Error> {
     };
 
     match (
-        player.timely_last_at.clone(),
-        player.timely_end_at.clone(),
-        player.timely_last_value.clone(),
+        player.timely_last_at,
+        player.timely_end_at,
+        player.timely_last_value,
     ) {
         (None, None, None) => {
             tracing::info!("{}({}) gets first timely", user.name, user.id);
@@ -38,7 +39,7 @@ pub async fn timely(ctx: Context<'_>) -> Result<(), Error> {
             if is_next_day && !is_day_after_next_day && !is_timely_end {
                 multiply_timely(ctx, user, &mut player, end_at, last_value).await?;
             } else if !is_next_day {
-                let duration_to_next_day = (last_time + Duration::days(1) - Utc::now()) as Duration;
+                let duration_to_next_day = last_time + Duration::days(1) - Utc::now();
                 let duration_str = format!(
                     "{} ч. {} мин.",
                     duration_to_next_day.num_hours(),
@@ -72,6 +73,13 @@ pub async fn timely(ctx: Context<'_>) -> Result<(), Error> {
     Ok(())
 }
 
+fn help_text() -> String {
+    serenity::MessageBuilder::new()
+        .push("Ну это надо быть сверх tupiest чтобы промахнуться по клавишам, написывая эту команду. Писать надо так: ")
+        .push_mono("(/|!)timely")
+        .build()
+}
+
 #[tracing::instrument(name = "first_time")]
 pub async fn first_time(
     ctx: Context<'_>,
@@ -88,7 +96,7 @@ pub async fn first_time(
         CreateReply::default().embed(
             serenity::CreateEmbed::default().title("Поздравляю с первый дейликом")
                 .description(format!(
-                    "На первый раз тебе начислено +{:.2}. Баланс теперь {:.2}. можешь засунуть их себе в ASS",
+                    "На первый раз тебе начислено +{:.2}. Баланс теперь {:.2}. Можешь засунуть их себе в ASS",
                     value, player.balance
                 ))
                 .color(serenity::Color::DARK_GREEN)
